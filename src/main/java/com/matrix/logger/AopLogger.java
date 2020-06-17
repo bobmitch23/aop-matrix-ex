@@ -33,7 +33,7 @@ public class AopLogger {
 
     @AfterReturning(pointcut = "execution(* com.matrix.service.MatrixFunctionsServiceImpl.findDeterminant(..))", returning = "determinant")
     public void logAfterFindingDeterminant(Object determinant) {
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         log.info("The determinant is {}", df.format(determinant));
     }
 }
