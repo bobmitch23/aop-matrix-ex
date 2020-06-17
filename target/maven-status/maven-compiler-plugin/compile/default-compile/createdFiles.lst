@@ -1,0 +1,5 @@
+com/matrix/service/MatrixFunctionsServiceImpl.class
+com/matrix/Main.class
+com/matrix/domain/MultiplyMatrix.class
+com/matrix/domain/Matrix.class
+com/matrix/service/MatrixFunctionsService.class

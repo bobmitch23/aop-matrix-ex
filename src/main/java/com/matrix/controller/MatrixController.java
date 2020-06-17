@@ -1,0 +1,34 @@
+package com.matrix.controller;
+
+import com.matrix.domain.Matrix;
+import com.matrix.domain.MultiplyMatrix;
+import com.matrix.service.MatrixFunctionsService;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.text.DecimalFormat;
+
+@RestController
+public class MatrixController {
+    private final MatrixFunctionsService matrixFunctionsService;
+
+    public MatrixController(MatrixFunctionsService matrixFunctionsService) {
+        this.matrixFunctionsService = matrixFunctionsService;
+    }
+
+    @PostMapping(value = "/multiply", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> multiply(@RequestBody MultiplyMatrix matrix) {
+        Matrix result = matrixFunctionsService.multiply(matrix.getFirstMatrix(), matrix.getSecondMatrix());
+        return ResponseEntity.ok(result.toLogFriendlyString());
+    }
+
+    @PostMapping(value = "/findDeterminant", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> findDeterminant(@RequestBody Matrix matrix) {
+        double result = matrixFunctionsService.findDeterminant(matrix);
+        DecimalFormat df = new DecimalFormat("#.00");
+        return ResponseEntity.ok(df.format(result));
+    }
+}
