@@ -22,13 +22,13 @@ public class MatrixController {
     @PostMapping(value = "/multiply", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> multiply(@RequestBody MultiplyMatrix matrix) {
         Matrix result = matrixFunctionsService.multiply(matrix.getFirstMatrix(), matrix.getSecondMatrix());
-        return ResponseEntity.ok(result.toLogFriendlyString());
+        return ResponseEntity.ok(result.toString());
     }
 
     @PostMapping(value = "/findDeterminant", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> findDeterminant(@RequestBody Matrix matrix) {
         double result = matrixFunctionsService.findDeterminant(matrix);
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         return ResponseEntity.ok(df.format(result));
     }
 }
