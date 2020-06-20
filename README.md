@@ -10,15 +10,11 @@ Supported HTTP Verbs: POST
 
 Example json payload:
 ```javascript
-{
-	"firstMatrix": {
-		"values": [[1,4.8],[7.8,5.6]]
-	},
-	
-	"secondMatrix": {
-		"values": [[-3,9.2],[2,-8.7]]
-	}
-}
+[
+	{"values": [[1,4.8],[7.8,5.6]]},
+	{"values": [[2.2,8.7],[7.9,1.6]]},
+	{"values": [[8.3,4.7],[6.7,7.6]]}
+]
 ```
 
 ## Endpoint 2
