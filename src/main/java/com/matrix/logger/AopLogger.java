@@ -16,8 +16,8 @@ public class AopLogger {
 
     @Before(value = "execution(* com.matrix.service.MatrixFunctionsServiceImpl.multiply(..))")
     public void logBeforeMultiply(JoinPoint joinPoint) {
-        Object[] matrixObjects = joinPoint.getArgs();
-        log.info("We are going to multiply {} and {}", matrixObjects[0].toString(), matrixObjects[1].toString());
+        Object[] listOfMatrices = joinPoint.getArgs();
+        log.info("We are going to multiply {} ", listOfMatrices);
     }
 
     @AfterReturning(pointcut = "execution(* com.matrix.service.MatrixFunctionsServiceImpl.multiply(..))", returning = "matrix")
