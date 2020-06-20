@@ -32,12 +32,12 @@ public class Matrix {
 
     @Override
     public String toString() {
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
         for (int i = 0; i < getNumRows(); i++) {
             String row = "";
-            for (int j = 0; j < getNumRows(); j++) {
+            for (int j = 0; j < getNumColumns(); j++) {
                 row += df.format(values[i][j]) + " ";
             }
             builder.append(row);

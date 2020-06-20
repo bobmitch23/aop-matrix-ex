@@ -1,7 +1,6 @@
 package com.matrix.controller;
 
 import com.matrix.domain.Matrix;
-import com.matrix.domain.MultiplyMatrix;
 import com.matrix.service.MatrixFunctionsService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 @RestController
 public class MatrixController {
@@ -20,8 +20,8 @@ public class MatrixController {
     }
 
     @PostMapping(value = "/multiply", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> multiply(@RequestBody MultiplyMatrix matrix) {
-        Matrix result = matrixFunctionsService.multiply(matrix.getFirstMatrix(), matrix.getSecondMatrix());
+    public ResponseEntity<String> multiply(@RequestBody List<Matrix> matrices) {
+        Matrix result = matrixFunctionsService.multiply(matrices);
         return ResponseEntity.ok(result.toString());
     }
 
