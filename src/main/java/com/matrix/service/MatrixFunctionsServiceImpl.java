@@ -3,10 +3,25 @@ package com.matrix.service;
 import com.matrix.domain.Matrix;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class MatrixFunctionsServiceImpl implements MatrixFunctionsService {
 
     @Override
+    public Matrix multiply(List<Matrix> matrices) {
+        if (matrices.size() < 2) {
+            throw new IllegalArgumentException("Need at least two matrices to multiply");
+        }
+        Matrix result = multiply(matrices.get(0), matrices.get(1));
+        int i = 2;
+        while (i < matrices.size()) {
+            result = multiply(result, matrices.get(i));
+            i++;
+        }
+        return result;
+    }
+
     public Matrix multiply(Matrix firstMatrix, Matrix secondMatrix) {
         if (firstMatrix.getNumColumns() != secondMatrix.getNumRows()) {
             throw new IllegalArgumentException("The number of columns in the first matrix must equal the number of rows in the second matrix");
@@ -33,7 +48,7 @@ public class MatrixFunctionsServiceImpl implements MatrixFunctionsService {
     @Override
     public double findDeterminant(Matrix matrix) {
         if (matrix.getNumRows() != matrix.getNumColumns()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Cannot find the determinant of a non square matrix");
         }
         if (matrix.getNumRows() == 1) {
             return matrix.getValue(0, 0);

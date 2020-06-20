@@ -15,7 +15,7 @@ class MatrixMultiplicationTests extends Specification {
     }
 
     def "Test exception is thrown when matrix dimensions do not match"() {
-        given: "two matrices where num rows of first matrix DOES NOT equal num columns of second matrix"
+        given: "two matrices where num rows of first matrix DOES NOT equal num columns of second matrix <Matrix1>, <Matrix2>"
         Matrix firstMatrix = new Matrix()
         double[][] firstValues = [
                 [1d, 5d]
@@ -31,15 +31,19 @@ class MatrixMultiplicationTests extends Specification {
         secondMatrix.setValues(secondValues)
 
         when: "we try and multiple the two matrices together"
-        Matrix result = matrixFunctionsService.multiply(firstMatrix, secondMatrix)
+        Matrix result = matrixFunctionsService.multiply(Arrays.asList(firstMatrix, secondMatrix))
 
         then: "an exception is thrown"
         def e = thrown(IllegalArgumentException)
 
+        and: ""
+        reportInfo("Matrix1:<br>" + convertNewLineToHTMLBreakForReport(firstMatrix))
+        reportInfo("Matrix2:<br>" + convertNewLineToHTMLBreakForReport(secondMatrix))
+
     }
 
-    def "Test matrix multiplication is working"() {
-        given: "two matrices where num rows of first matrix DOES equal num columns of second matrix"
+    def "Test matrix multiplication with two matrices"() {
+        given: "two matrices where num rows of first matrix DOES equal num columns of second matrix <Matrix1>, <Matrix2>"
         Matrix firstMatrix = new Matrix()
         double[][] firstValues = [
                 [1d, 5d],
@@ -64,10 +68,73 @@ class MatrixMultiplicationTests extends Specification {
         expectedMatrix.setValues(expectedValues)
 
         when: "we try and multiple the two matrices together"
-        Matrix resultMatrix = matrixFunctionsService.multiply(firstMatrix, secondMatrix)
+        Matrix result = matrixFunctionsService.multiply(Arrays.asList(firstMatrix, secondMatrix))
 
-        then: "the result is equal to the expected matrix"
-        resultMatrix == expectedMatrix
+        then: "the result is equal to the expected matrix <ExpectedMatrix>"
+        result == expectedMatrix
 
+        and: ""
+        reportInfo("Matrix1:<br>" + convertNewLineToHTMLBreakForReport(firstMatrix))
+        reportInfo("Matrix2:<br>" + convertNewLineToHTMLBreakForReport(secondMatrix))
+        reportInfo("ExpectedMatrix:<br>" + convertNewLineToHTMLBreakForReport(expectedMatrix))
+    }
+
+    def "Test matrix multiplication with four matrices"() {
+        given: "<Matrix1>, <Matrix2>, <Matrix3>, <Matrix4>"
+        Matrix firstMatrix = new Matrix()
+        double[][] firstValues = [
+                [1d, 5d],
+                [2d, 3d],
+                [1d, 7d]
+        ]
+        firstMatrix.setValues(firstValues)
+
+        Matrix secondMatrix = new Matrix()
+        double[][] secondValues = [
+                [1d, 2d, 3d, 7d],
+                [5d, 2d, 8d, 1d]
+        ]
+        secondMatrix.setValues(secondValues)
+
+        Matrix thirdMatrix = new Matrix()
+        double[][] thirdValues = [
+                [4d, 1d],
+                [7d, 7d],
+                [1d, 2d],
+                [8d, 5d]
+        ]
+        thirdMatrix.setValues(thirdValues)
+
+        Matrix fourthMatrix = new Matrix()
+        double[][] fourthValues = [
+                [2d],
+                [2d]
+        ]
+        fourthMatrix.setValues(fourthValues)
+
+        Matrix expectedMatrix = new Matrix()
+        double[][] expectedValues = [
+                [1166d],
+                [1072d],
+                [1526d]
+        ]
+        expectedMatrix.setValues(expectedValues)
+
+        when: "we try and multiple the four matrices together"
+        Matrix result = matrixFunctionsService.multiply(Arrays.asList(firstMatrix, secondMatrix, thirdMatrix, fourthMatrix))
+
+        then: "the result is equal to the expected matrix <ExpectedMatrix>"
+        result == expectedMatrix
+
+        and: ""
+        reportInfo("Matrix1:<br>" + convertNewLineToHTMLBreakForReport(firstMatrix))
+        reportInfo("Matrix2:<br>" + convertNewLineToHTMLBreakForReport(secondMatrix))
+        reportInfo("Matrix3:<br>" + convertNewLineToHTMLBreakForReport(thirdMatrix))
+        reportInfo("Matrix4:<br>" + convertNewLineToHTMLBreakForReport(fourthMatrix))
+        reportInfo("ExpectedMatrix:<br>" + convertNewLineToHTMLBreakForReport(expectedMatrix))
+    }
+
+    def convertNewLineToHTMLBreakForReport(Matrix matrix) {
+        return matrix.toString().replaceAll("\n", "<br>")
     }
 }
