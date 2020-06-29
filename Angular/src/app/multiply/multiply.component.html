@@ -1,0 +1,20 @@
+<div *ngFor="let form of formArray; let j=index" class="multiple-matrices">
+    <div class="matrix-text">
+        <span>Matrix {{j+1}}</span>
+    </div>
+    <form [formGroup]="form">
+        <div *ngFor="let row of form.controls;let i=index">
+          <input class="number-input" type="number" required *ngFor="let col of row.controls" [formControl]="col">
+        </div>
+    </form>
+</div>
+<div>
+    <button class="btn btn-info" (click)="multiply()">Calculate</button>
+</div>
+
+<div *ngIf="(solutionValues != undefined)">
+    <p class="text-center list-inline py-2">The Solution is:</p>
+    <div *ngFor="let row of solutionValues">
+        <span *ngFor="let element of row" class="solution-element">{{element}}</span>
+    </div> 
+  </div>
