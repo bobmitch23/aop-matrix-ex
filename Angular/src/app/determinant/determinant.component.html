@@ -1,0 +1,36 @@
+<div *ngIf="!dimensionEstablished">
+    <form (ngSubmit)="onSubmitDimension()" #userForm="ngForm">
+      <div class="form-group">
+        <input type="text" [(ngModel)]="dimension" 
+          class="form-control"
+          id="dimesnsion"
+          name="dimesnsion"
+          placeholder="Enter dimension"
+          required #name="ngModel">
+      </div>
+      <div>
+        <ul class="text-center list-inline py-3">
+          <li><button type="submit" [disabled]="!userForm.form.valid" 
+            class="btn btn-info">Create Matrix</button></li>
+        </ul>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="dimensionEstablished">
+    <form (ngSubmit)="onSubmitDeterminant()" [formGroup]="form">
+        <div *ngFor="let row of form.controls;let i=index">
+          <input class="number-input" type="number" required *ngFor="let col of row.controls" [formControl]="col">
+        </div>
+        <div>
+            <ul class="text-center list-inline py-3">
+              <li><button type="submit" [disabled]="!form.valid" 
+                class="btn btn-info">Find Determinant</button></li>
+            </ul>
+          </div>
+      </form>
+  </div>
+
+  <div *ngIf="(solution | async) as solution">
+    <p class="text-center list-inline py-2">The determinant is {{solution}}</p>
+  </div>

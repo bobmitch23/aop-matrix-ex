@@ -1,0 +1,10 @@
+.number-input{
+    width: 60px;
+}
+
+input.number-input{
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

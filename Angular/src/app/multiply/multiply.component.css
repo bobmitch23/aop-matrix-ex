@@ -1,0 +1,27 @@
+.number-input{
+    width: 60px;
+}
+
+input.number-input{
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.solution-element{
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 40px;
+}
+
+.matrix-text{
+    margin-top: 10px;
+}
+
+.btn-info{
+    margin-top: 10px;
+}

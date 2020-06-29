@@ -1,0 +1,39 @@
+<div *ngIf="!numMatricesEstablished">
+    <form (ngSubmit)="onSubmitNumMatrices()" #userForm="ngForm">
+      <div class="form-group text-center num-matrices">
+        <input type="number" [(ngModel)]="numMatrices" 
+          class="form-control"
+          id="numMatrices"
+          name="numMatrices"
+          placeholder="Enter # of matrices"
+          onkeypress="return event.charCode > 48" onkeyup="if(this.value > 10){this.value = 10}"min="1" max="10"
+          required #name="ngModel">
+      </div>
+      <div>
+        <ul class="text-center list-inline py-3">
+          <li><button type="submit" [disabled]="!userForm.form.valid" 
+            class="btn btn-info">Create Matrices</button></li>
+        </ul>
+      </div>
+    </form>
+</div>
+
+<div *ngIf="numMatricesEstablished">
+    <form (ngSubmit)="onSubmitCreateMatrices()" [formGroup]="form">
+        <div *ngFor="let row of form.controls;let i=index">
+        <p>Matrix {{i+1}} </p>
+        <input class="number-input" type="number" onkeypress="return event.charCode > 48" onkeyup="if(this.value > 10){this.value = 10}"min="1" max="10" required  [formControl]="row.controls[0]">
+        <span> x </span>
+        <input class="number-input" type="number" onkeypress="return event.charCode > 48" onkeyup="if(this.value > 10){this.value = 10}"min="1" max="10" required  [formControl]="row.controls[1]">
+        </div>
+        <div>
+            <ul class="text-center list-inline py-3">
+              <li><button type="submit" [disabled]="!form.valid" 
+                class="btn btn-info">Create Matrices</button></li>
+            </ul>
+          </div>
+      </form>
+      <div *ngIf="error" class = "error">
+        <span><i class="fa fa-times-circle"></i>Dimensions don't match</span>
+      </div>
+  </div>

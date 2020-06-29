@@ -20,9 +20,9 @@ public class MatrixController {
     }
 
     @PostMapping(value = "/multiply", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> multiply(@RequestBody List<Matrix> matrices) {
+    public ResponseEntity<Matrix> multiply(@RequestBody List<Matrix> matrices) {
         Matrix result = matrixFunctionsService.multiply(matrices);
-        return ResponseEntity.ok(result.toString());
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping(value = "/findDeterminant", produces = MediaType.APPLICATION_JSON_VALUE)
