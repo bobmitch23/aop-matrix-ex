@@ -1,6 +1,4 @@
-# aop-matrix-ex
-This is a simple Spring Boot Application that demonstrates Spring AOP functionality.
-
+# SpringBoot Client
 There are two endpoints, one to multiply matrices and one to find the determinant of matrices.
 
 ## Endpoint 1
