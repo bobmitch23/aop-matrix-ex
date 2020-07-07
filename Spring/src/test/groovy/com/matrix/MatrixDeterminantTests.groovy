@@ -1,18 +1,33 @@
 package com.matrix
 
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.matrix.controller.GlobalExceptionHandler
+import com.matrix.controller.MatrixController
 import com.matrix.domain.Matrix
-import com.matrix.service.MatrixFunctionsService
 import com.matrix.service.MatrixFunctionsServiceImpl
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import spock.lang.Shared
 import spock.lang.Specification
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
 class MatrixDeterminantTests extends Specification {
+
     @Shared
-    private MatrixFunctionsService matrixFunctionsService
+    MockMvc mockMvc
+    @Shared
+    ObjectMapper mapper
 
     def setupSpec() {
-        matrixFunctionsService = new MatrixFunctionsServiceImpl();
+        mapper = new ObjectMapper()
+        mockMvc = MockMvcBuilders.standaloneSetup(new MatrixController(new MatrixFunctionsServiceImpl())).setControllerAdvice(new GlobalExceptionHandler()).build()
     }
+
+    def baseDeterminantUri = "/findDeterminant"
 
     def "Test exception when matrix is not a square"() {
         given: "a matrix that is NOT a square <NonSquareMatrix>"
@@ -20,13 +35,15 @@ class MatrixDeterminantTests extends Specification {
         double[][] values = [
                 [1d, 5d]
         ]
+
         matrix.setValues(values)
 
         when: "we try and find the determinant"
-        double result = matrixFunctionsService.findDeterminant(matrix)
+        def response = mockMvc.perform(post(baseDeterminantUri).contentType("application/json").content(mapper.writeValueAsString(matrix)))
 
-        then: "an exception is thrown"
-        def e = thrown(IllegalArgumentException)
+        then: "a 400 is returned stating that you cannot have a non-square matrix"
+        assert response.andExpect(status().isBadRequest())
+        assert response.andExpect(content().string("Cannot find the determinant of a non square matrix"))
 
         and: ""
         reportInfo("NonSquareMatrix: <br>" + convertNewLineToHTMLBreakForReport(matrix))
@@ -41,10 +58,11 @@ class MatrixDeterminantTests extends Specification {
         matrix.setValues(values)
 
         when: "we try and find the determinant"
-        double result = matrixFunctionsService.findDeterminant(matrix)
+        def response = mockMvc.perform(post(baseDeterminantUri).contentType("application/json").content(mapper.writeValueAsString(matrix)))
 
-        then: "the determinant is 1"
-        result == 1d
+        then: "a 200 is returned along with a determinant of 1"
+        assert response.andExpect(status().isOk())
+        assert response.andExpect(content().string("1.00"))
 
         and: ""
         reportInfo("1x1Matrix: <br>" + convertNewLineToHTMLBreakForReport(matrix))
@@ -61,10 +79,11 @@ class MatrixDeterminantTests extends Specification {
 
 
         when: "we try and find the determinant"
-        double result = matrixFunctionsService.findDeterminant(matrix)
+        def response = mockMvc.perform(post(baseDeterminantUri).contentType("application/json").content(mapper.writeValueAsString(matrix)))
 
-        then: "the determinant is -4"
-        result == -4d
+        then: "a 200 is returned along with a determinant of -4"
+        assert response.andExpect(status().isOk())
+        assert response.andExpect(content().string("-4.00"))
 
         and: ""
         reportInfo("2x2Matrix: <br>" + convertNewLineToHTMLBreakForReport(matrix))
@@ -85,10 +104,11 @@ class MatrixDeterminantTests extends Specification {
 
 
         when: "we try and find the determinant"
-        double result = matrixFunctionsService.findDeterminant(matrix)
+        def response = mockMvc.perform(post(baseDeterminantUri).contentType("application/json").content(mapper.writeValueAsString(matrix)))
 
-        then: "the determinant is 1366716"
-        result == 1366716
+        then: "a 200 is returned along with a determinant of 1366716"
+        assert response.andExpect(status().isOk())
+        assert response.andExpect(content().string("1366716.00"))
 
         and: ""
         reportInfo("6x6Matrix: <br>" + convertNewLineToHTMLBreakForReport(matrix))

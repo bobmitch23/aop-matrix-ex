@@ -1,18 +1,32 @@
 package com.matrix
 
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.matrix.controller.GlobalExceptionHandler
+import com.matrix.controller.MatrixController
 import com.matrix.domain.Matrix
-import com.matrix.service.MatrixFunctionsService
 import com.matrix.service.MatrixFunctionsServiceImpl
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import spock.lang.Shared
 import spock.lang.Specification
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
 class MatrixMultiplicationTests extends Specification {
     @Shared
-    private MatrixFunctionsService matrixFunctionsService
+    MockMvc mockMvc
+    @Shared
+    ObjectMapper mapper
 
     def setupSpec() {
-        matrixFunctionsService = new MatrixFunctionsServiceImpl();
+        mapper = new ObjectMapper()
+        mockMvc = MockMvcBuilders.standaloneSetup(new MatrixController(new MatrixFunctionsServiceImpl())).setControllerAdvice(new GlobalExceptionHandler()).build()
     }
+
+    def baseMultiplyUri = "/multiply"
 
     def "Test exception is thrown when matrix dimensions do not match"() {
         given: "two matrices where num rows of first matrix DOES NOT equal num columns of second matrix <Matrix1>, <Matrix2>"
@@ -31,10 +45,11 @@ class MatrixMultiplicationTests extends Specification {
         secondMatrix.setValues(secondValues)
 
         when: "we try and multiple the two matrices together"
-        Matrix result = matrixFunctionsService.multiply(Arrays.asList(firstMatrix, secondMatrix))
+        def response = mockMvc.perform(post(baseMultiplyUri).contentType("application/json").content(mapper.writeValueAsString(Arrays.asList(firstMatrix, secondMatrix))))
 
-        then: "an exception is thrown"
-        def e = thrown(IllegalArgumentException)
+        then: "a 400 is returned indicating the num cols of the first matrix must equal the num rows of the second matrix"
+        assert response.andExpect(status().isBadRequest())
+        assert response.andExpect(content().string("The number of columns in the first matrix must equal the number of rows in the second matrix"))
 
         and: ""
         reportInfo("Matrix1:<br>" + convertNewLineToHTMLBreakForReport(firstMatrix))
@@ -68,10 +83,11 @@ class MatrixMultiplicationTests extends Specification {
         expectedMatrix.setValues(expectedValues)
 
         when: "we try and multiple the two matrices together"
-        Matrix result = matrixFunctionsService.multiply(Arrays.asList(firstMatrix, secondMatrix))
+        def response = mockMvc.perform(post(baseMultiplyUri).contentType("application/json").content(mapper.writeValueAsString(Arrays.asList(firstMatrix, secondMatrix))))
 
-        then: "the result is equal to the expected matrix <ExpectedMatrix>"
-        result == expectedMatrix
+        then: "a 200 is returned with expected matrix <ExpectedMatrix>"
+        assert response.andExpect(status().isOk())
+        assert expectedMatrix.equals(mapper.readValue(response.andReturn().getResponse().getContentAsString(), Matrix.class))
 
         and: ""
         reportInfo("Matrix1:<br>" + convertNewLineToHTMLBreakForReport(firstMatrix))
@@ -121,10 +137,11 @@ class MatrixMultiplicationTests extends Specification {
         expectedMatrix.setValues(expectedValues)
 
         when: "we try and multiple the four matrices together"
-        Matrix result = matrixFunctionsService.multiply(Arrays.asList(firstMatrix, secondMatrix, thirdMatrix, fourthMatrix))
+        def response = mockMvc.perform(post(baseMultiplyUri).contentType("application/json").content(mapper.writeValueAsString(Arrays.asList(firstMatrix, secondMatrix, thirdMatrix, fourthMatrix))))
 
-        then: "the result is equal to the expected matrix <ExpectedMatrix>"
-        result == expectedMatrix
+        then: "a 200 is returned with expected matrix <ExpectedMatrix>"
+        assert response.andExpect(status().isOk())
+        assert expectedMatrix.equals(mapper.readValue(response.andReturn().getResponse().getContentAsString(), Matrix.class))
 
         and: ""
         reportInfo("Matrix1:<br>" + convertNewLineToHTMLBreakForReport(firstMatrix))

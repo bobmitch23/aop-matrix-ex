@@ -1,5 +1,6 @@
 package com.matrix.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,10 +15,12 @@ public class Matrix {
         values = new double[rows][columns];
     }
 
+    @JsonIgnore
     public int getNumRows() {
         return values.length;
     }
 
+    @JsonIgnore
     public int getNumColumns() {
         return values[0].length;
     }
