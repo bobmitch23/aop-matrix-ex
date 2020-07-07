@@ -22,7 +22,7 @@ public class MatrixFunctionsServiceImpl implements MatrixFunctionsService {
         return result;
     }
 
-    public Matrix multiply(Matrix firstMatrix, Matrix secondMatrix) {
+    private Matrix multiply(Matrix firstMatrix, Matrix secondMatrix) {
         if (firstMatrix.getNumColumns() != secondMatrix.getNumRows()) {
             throw new IllegalArgumentException("The number of columns in the first matrix must equal the number of rows in the second matrix");
         }
